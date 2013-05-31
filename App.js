@@ -149,7 +149,20 @@ Ext.define('CustomApp', {
             pointInterval: 25 * 3600 * 1000,
             pointStart: Date.UTC(2006,0,10)
           },
-
+          {
+                type: 'line',
+                name: 'Regression Line',
+                data: [[Date.UTC(2006,0,05), 17], [Date.UTC(2006,0,10), 100]],
+                marker: {
+                    enabled: false
+                },
+                states: {
+                    hover: {
+                        lineWidth: 0
+                    }
+                },
+                enableMouseTracking: false
+          }
         ]
       },
       chartConfig: {
