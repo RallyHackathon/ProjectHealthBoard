@@ -42,7 +42,7 @@ Ext.define('CustomApp', {
                         {
                             xtype: 'container',
                             itemId: 'HealthPanel',
-                            columnWidth: .25,
+                            columnWidth: 0.25,
                             border: 5,
                             margin: 10,
                             style: {
@@ -72,7 +72,7 @@ Ext.define('CustomApp', {
                                     style: {
                                         borderColor: 'purple',
                                         borderStyle: 'solid'
-                                    },
+                                    }
                                 },
                                 {
                                     xtype: 'container',
@@ -84,7 +84,7 @@ Ext.define('CustomApp', {
                                     style: {
                                         borderColor: 'yellow',
                                         borderStyle: 'solid'
-                                    },
+                                    }
                                 }
                             ]
                         },
@@ -109,51 +109,95 @@ Ext.define('CustomApp', {
 
     launch: function() {
 
-      /*var dataStore = this._createSampleDataSet();*/ 
-
-
-    	this._createChart();
+      this._createChart();
     },
 
+  _createChart: function(){
+
+    var chartContainer = this.down('#Chart');
+
+    var myChart = Ext.create('Rally.ui.chart.Chart',{
+      width: 500,
+      height: 500,
+      chartData: {
+        series: [
+          {
+            type: 'area',
+            name: 'AcceptedCount',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 16.9, 19.6],
+            pointInterval: 20 * 3600 * 1000,
+            pointStart: Date.UTC(2006,0,01)
+          },
+          {
+            type: 'line',
+            name: 'Accepted Count Trend',
+            data: [19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6],
+            pointInterval: 20 * 3600 * 1000,
+            pointStart: Date.UTC(2006,0,01)
+          },
+          {
+            type: 'area',
+            name: 'Release 1.0',
+            data: [17.0, 16.9, 19.5, 114.5, 118.2, 121.5, 125.2, 126.5, 123.3, 118.3, 113.9, 100],
+            pointInterval: 20 * 3600 * 1000,
+            pointStart: Date.UTC(2006,0,01)
+          },
+          {
+            type: 'line',
+            name: 'Release 1.0 Trend',
+            data: [100,100,100,100,100,100,100,100,100,100,100,100],
+            pointInterval: 25 * 3600 * 1000,
+            pointStart: Date.UTC(2006,0,10)
+          },
+
+        ]
+      },
+      chartConfig: {
+         chart: {
+             zoomType: 'x',
+             spacingRight: 20
+         },
+         title: {
+             text: 'My Title'
+         },
+         subtitle: {
+             text: 'My SubTitle'
+         },
+         xAxis: {
+          type: 'datetime',
+          maxZoom: 1 * 24 * 3600000, // fourteen days
+          title: 'x title',
+         },
+         yAxis: [
+             {
+                 title: {
+                     text: 'Count'
+                 }
+             }
+         ],
+         tooltip: {
+           shared: true
+         },
+         plotOptions: {
+           line: {
+             dashStyle: 'shortDash'
+           }
+         }
+             
+       }
+
+    });
+
+    chartContainer.add(myChart);
+
+  }
+
+});
+
+
+
 /*
-   _createSampleDataSet: function(){
-   	
-
-
-   		var myStore = Ext.create('Rally.data.custom.Store', {
-   			data:myData,
-   			fields: [
-   				{name: 'time', type: 'string'}, 
-   				{name: 'AcceptedCount', type: 'int'}
-   			]
-
-   		});
-   		return myStore;
-   },
-*/
-	_createChart: function(){
-
-    Ext.define('MyCalculator', {
-      extend:'Rally.data.lookback.calculator.BaseCalculator'
-      });
-
-    var myData = [
-        {time: "0", AcceptedCount: 0},
-        {time: "1", AcceptedCount: 10},
-        {time: "2", AcceptedCount: 20},
-        {time: "3", AcceptedCount: 30},
-        {time: "4", AcceptedCount: 40},
-        {time: "5", AcceptedCount: 40},
-        {time: "6", AcceptedCount: 50},
-        {time: "7", AcceptedCount: 70},
-        {time: "8", AcceptedCount: 50},
-        {time: "9", AcceptedCount: 90}
-      ];
-
-		var myChart = Ext.create('Rally.ui.chart.Chart',{
-			width: 500,
-			height: 500,
-			storeType: 'Rally.data.custom.Store',
+      storeType: 'Rally.data.custom.Store',
       storeConfig: {
         data:myData,
         fields: [
@@ -163,50 +207,14 @@ Ext.define('CustomApp', {
         ]
 
       },
-      calculatorType: 'Rally.data.lookback.calculator.BaseCalculator',
-      calculatorConfig: {}, 
-			xField: 'time',
-			series:[
-			 {
-			 	type:'column',
-			 	dataIndex:'AcceptedCount',
-			 	name:'Accepted Count',
-			 	visible: 'true'
-			 }
-			],
-	        chartConfig: {
-                 chart: {
-                     zoomType: 'xy'
-                 },
-                 title: {
-                     text: 'My Chart'
-                 },
-                 xAxis: {
-                     tickmarkPlacement: 'on',
-                     tickInterval: 20,
-                     title: {
-                         text: 'Days'
-                     }
-                 },
-                 yAxis: [
-                     {
-                         title: {
-                             text: 'Count'
-                         }
-                     }
-                 ]
-            }
+      xField: 'time',
+      series:[
+       {
+         type:'column',
+         dataIndex:'AcceptedCount',
+         name:'Accepted Count',
+         visible: 'true'
+       }
+      ],
 
-		});
-
-		this.add(myChart);
-
-
-        console.log("hello");
-
-
-	}
-
-});
-
-
+*/
