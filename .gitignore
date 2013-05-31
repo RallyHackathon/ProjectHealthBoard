@@ -4,7 +4,12 @@ deploy.json
 App-debug.html
 # Ignore 'local' build version of App
 App-local.html
+# log files
+*.log
 #IDE Files
 .idea
 .c9revisions
 node_modules
+# Real Editor files
+*.swp
+
