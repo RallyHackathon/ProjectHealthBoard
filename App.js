@@ -739,7 +739,7 @@ _createChart: function(){
       },
       chartConfig: {
          chart: {
-             zoomType: 'x',
+             zoomType: 'xy',
              spacingRight: 20
          },
          title: {
