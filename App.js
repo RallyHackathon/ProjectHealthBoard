@@ -466,8 +466,13 @@
                     for(var i = 0; i<numYAxes; i++){
 
                       if (this.series[i] === undefined){
-                        this.series[i] = {data:[]};
-                      }
+                        if (i === 0) {
+                          seriesName = "Accepted";
+                        } else {
+                          seriesName = this.releaseTally[this.relObjIDs[i]].releaseName;
+                        }
+                        this.series[i] = {data:[], seriesName: seriesName};
+                    }
 
                       // 0 is acceptedCounts
                       if (i === 0){
@@ -667,19 +672,19 @@ _createChart: function(){
         series: [
           {
             type: 'area',
-            name: 'AcceptedCount',
+            name: this.series[0].seriesName,
             data: this.series[0].data/*, 
             pointInterval: 20 * 3600 * 1000,
             pointStart: Date.UTC(2006,0,1) */
           },
           {
             type: 'line',
-            name: 'Beta 1.0',
+            name: this.series[1].seriesName,
             data: this.series[1].data
           },
           {
             type: 'line',
-            name: 'Release 1.0',
+            name: this.series[1].seriesName,
             data: this.series[1].data
           }/*,
           {
@@ -752,7 +757,6 @@ _createChart: function(){
              dashStyle: 'shortDash'
            }
          }
-             
        }
 
     });
@@ -763,28 +767,3 @@ _createChart: function(){
 
 });
 
-
-
-
-            /*
-                  storeType: 'Rally.data.custom.Store',
-                  storeConfig: {
-                    data:myData,
-                    fields: [
-                      {name: 'time', type: 'string'}, 
-                      {name: 'AcceptedCount', type: 'int'}
-
-                    ]
-
-                  },
-                  xField: 'time',
-                  series:[
-                   {
-                     type:'column',
-                     dataIndex:'AcceptedCount',
-                     name:'Accepted Count',
-                     visible: 'true'
-                   }
-                  ],
-
-            */
