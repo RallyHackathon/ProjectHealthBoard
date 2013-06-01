@@ -391,15 +391,15 @@ Ext.define('CustomApp', {
 
   _createChartSeries: function(){
 
-    var series = [];
+    this.series = [];
 
     var numYAxes = this.relObjIDs.length;
     console.log("relObjIDs",this.relObjIDs);
 
     for(var i = 0; i<numYAxes; i++){
 
-      if (series[i] === undefined){
-        series[i] = {data:[]};
+      if (this.series[i] === undefined){
+        this.series[i] = {data:[]};
       }
 
       // 0 is acceptedCounts
@@ -414,18 +414,13 @@ Ext.define('CustomApp', {
           console.log(orderedDate)
           Ext.each(this.relObjIDs, function(relObjID, index){
 
-            console.log("here: ", this.releaseTally, relObjID, orderedDate);
-
-
-            console.log(this.releaseTally[relObjID]);
-
             if (this.releaseTally[relObjID][orderedDate] !== undefined){
               accumulatedTotal += this.releaseTally[relObjID][orderedDate].acceptedCount;
             }
 
           },this);
 
-          series[i].data[j] = accumulatedTotal;  
+          this.series[i].data[j] = accumulatedTotal;  
 
           j++;
 
@@ -436,7 +431,7 @@ Ext.define('CustomApp', {
 
     }
 
-    console.log("series", series);
+    console.log("this.series", this.series);
 
 
   },
@@ -455,10 +450,10 @@ Ext.define('CustomApp', {
           {
             type: 'area',
             name: 'AcceptedCount',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 16.9, 19.6],
+            data: this.series[0].data/*, 
             pointInterval: 20 * 3600 * 1000,
-            pointStart: Date.UTC(2006,0,01)
-          },
+            pointStart: Date.UTC(2006,0,01) */
+          }/*,
           {
             type: 'line',
             name: 'Accepted Count Trend',
@@ -479,7 +474,7 @@ Ext.define('CustomApp', {
             data: [100,100,100,100,100,100,100,100,100,100,100,100],
             pointInterval: 25 * 3600 * 1000,
             pointStart: Date.UTC(2006,0,10)
-          },
+          }, 
           {
                 type: 'line',
                 name: 'Regression Line',
@@ -493,7 +488,7 @@ Ext.define('CustomApp', {
                     }
                 },
                 enableMouseTracking: false
-          }
+          } */
         ]
       },
       chartConfig: {
@@ -508,8 +503,9 @@ Ext.define('CustomApp', {
              text: 'My SubTitle'
          },
          xAxis: {
-          type: 'datetime',
-          maxZoom: 1 * 24 * 3600000, // fourteen days
+          /*type: 'datetime',
+          maxZoom: 1 * 24 * 3600000, // fourteen days */
+          categories: this.orderedDates,
           title: 'x title',
          },
          yAxis: [
