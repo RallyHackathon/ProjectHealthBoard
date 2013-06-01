@@ -392,11 +392,11 @@
                                     }
 
                                     var creationDate = releasesCumFlowRecs.get('CreationDate');
-                                    creationDate = Ext.Date.format(new Date(creationDate),'Y-m-d');
+                                    creationDate = Ext.Date.format(new Date(creationDate),'Y-M-d');
 
                                     if (this.releaseTally[relObjID][creationDate] === undefined ) {
                                        this.releaseTally[relObjID][creationDate] = {acceptedCount: 0, totalCount: 0};
-                                       this.orderedDates.push(Ext.Date.format(new Date(creationDate), 'Y-m-d'));
+                                       this.orderedDates.push(Ext.Date.format(new Date(creationDate), 'Y-M-d'));
                                     }
 
                                     if (releasesCumFlowRecs.get('CardState') === 'Accepted') {
@@ -616,7 +616,7 @@ _createPlotLines: function() {
   var plotLines = [];
   Ext.each(this.relObjIDs, function(relObjID, index) {
     var relEndDate = this.releaseTally[relObjID].releaseDate;
-    var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-m-d');
+    var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-M-d');
     var dateIndex = Ext.Array.indexOf(this.orderedDates, formattedRelEndDate);
     console.log(formattedRelEndDate);
     if (dateIndex > 0) {
@@ -633,8 +633,6 @@ _createPlotLines: function() {
         });
     }
   }, this);
-  console.log("plotlines", plotLines);
-  console.log('orderdates', this.orderedDates);
   return plotLines;
 },
 
