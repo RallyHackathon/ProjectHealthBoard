@@ -633,6 +633,7 @@ _createPlotLines: function() {
         });
     }
   }, this);
+  console.log('orderedDates', this.orderedDates);
   return plotLines;
 },
 
