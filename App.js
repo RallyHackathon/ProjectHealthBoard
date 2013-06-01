@@ -384,6 +384,9 @@
                         listeners: {
                           load: function(store, releasesCumFlowRecs, success) {
 
+                              console.log('releasesCumFlowRecs',releasesCumFlowRecs);
+
+
                               Ext.each(releasesCumFlowRecs, function(releasesCumFlowRecs, index) {
                                     
                                     var relObjID = releasesCumFlowRecs.get('ReleaseObjectID');
@@ -409,6 +412,7 @@
 
                                 },
                                 this);
+                              console.log('releaseTally',this.releaseTally);
 
                               this._extendDataPoints();
                               this._createChartSeries();
@@ -429,9 +433,15 @@
                         if (this.releaseTally[relObjID][orderedDate] === undefined)
                         {
                           this.releaseTally[relObjID][orderedDate] = {acceptedCount: 0};
+
+                          if (!this.releaseTally[relObjID][orderedDate].totalCount) {
+                            this.releaseTally[relObjID][orderedDate].totalCount = 0;
+                          }
+
                           if (index >1)
                           {
                             this.releaseTally[relObjID][orderedDate].acceptedCount = this.releaseTally[relObjID][this.orderedDates[index-1]].acceptedCount;
+                            this.releaseTally[relObjID][orderedDate].totalCount    = this.releaseTally[relObjID][this.orderedDates[index-1]].totalCount;
                           } 
                         }  
 
@@ -452,7 +462,7 @@
 
                       var lastDateIncr = Ext.Date.add(lastChartedDate, Ext.Date.DAY, i);
                       var lastDateIncrFormatted = Ext.Date.format(lastDateIncr, 'Y-M-d');
-                      console.log("adding date", lastDateIncrFormatted);
+                      //console.log("adding date", lastDateIncrFormatted);
                       this.orderedDates.push(lastDateIncrFormatted);
                     }
                   },
@@ -526,12 +536,16 @@
                       else {
 
                           var j = 0;
+                          console.log('here ', i);
                           Ext.each(this.orderedDates, function(orderedDate, index){
                             var myRelObjID = this.relObjIDs[i-1];
+
+                            console.log(myRelObjID);
 
                             if (this.releaseTally[myRelObjID][orderedDate] !== undefined){
                               accumulatedTotal = this.releaseTally[myRelObjID][orderedDate].totalCount;
                             }
+
 
                             this.series[i].data[j] = 0;
                             if (accumulatedTotal !== undefined)
@@ -541,6 +555,9 @@
                               this.series[i].data[j] = this.series[i].data[j-1];  
                             }
 
+
+                            // add in previous release
+                            this.series[i].data[j] += this.series[i-1].data[j];
                             j++;
 
                           },this); 
@@ -548,6 +565,8 @@
 
 
                     }
+
+                    console.log('series',this.series);
 
                   },
 
@@ -675,13 +694,18 @@ _createChart: function(){
           },
           {
             type: 'line',
-            name: 'Beta 1.0',
+            name: 'Release 1.0',   //TODO: Fill with release name
             data: this.series[1].data
           },
           {
             type: 'line',
-            name: 'Release 1.0',
-            data: this.series[1].data
+            name: 'Release 2.0',   //TODO: Fill with release name
+            data: this.series[2].data
+          },
+          {
+            type: 'line',
+            name: 'Release 3.0',   //TODO: Fill with release name
+            data: this.series[3].data
           }/*,
           {
             type: 'line',
