@@ -460,12 +460,13 @@
 
                         },this); 
 
-                        console.log(this.series[0].data);
+                        //console.log(this.series[0].data);
 
                       }
                       // Others are releases
                       else if (i === 1){ 
 
+                          var accumulatedTotal = 0;
                           var j = 0;
                           Ext.each(this.orderedDates, function(orderedDate, index){
                             var myRelObjID = this.relObjIDs[i-1];
