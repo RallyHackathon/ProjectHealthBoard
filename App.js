@@ -437,6 +437,22 @@
 
                     },this); 
 
+                    var finalRelObjID = this.relObjIDs[this.relObjIDs.length - 1];
+                    var finalRelEndDate = new Date(this.releaseTally[finalRelObjID].releaseDate);
+                    var lastChartedDate = new Date(this.orderedDates[this.orderedDates.length - 1]);
+
+                    console.log(finalRelEndDate, '****', lastChartedDate);
+                    var elapsedMs = Ext.Date.getElapsed(finalRelEndDate, lastChartedDate);
+                    // 1000 * 60 * 60 * 24
+                    var elapsedDays = Math.ceil((elapsedMs / 86400000));
+                    var bufferDays = 15;
+                    for (var i = 1; i <= elapsedDays + bufferDays; i++ ) {
+
+                      var lastDateIncr = Ext.Date.add(lastChartedDate, Ext.Date.DAY, i);
+                      var lastDateIncrFormatted = Ext.Date.format(lastDateIncr, 'Y-M-d');
+                      console.log("adding date", lastDateIncrFormatted);
+                      this.orderedDates.push(lastDateIncrFormatted);
+                    }
                   },
 
                   _createChartSeries: function(){
@@ -618,12 +634,12 @@ _createPlotLines: function() {
     var relEndDate = this.releaseTally[relObjID].releaseDate;
     var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-M-d');
     var dateIndex = Ext.Array.indexOf(this.orderedDates, formattedRelEndDate);
-    console.log(formattedRelEndDate);
+    console.log(formattedRelEndDate, dateIndex);
     if (dateIndex > 0) {
       plotLines.push(
         {
             color: 'red',
-            value: index,
+            value: dateIndex,
             width: 1,
             zIndex: 10,
             label: {
