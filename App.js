@@ -336,7 +336,7 @@
                           load: function(store, releaseRecords, success) {
                              Ext.each(releaseRecords, function(releaseRecord, index){
 
-                               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[], releaseDate: releaseRecord.get("ReleaseDate")};
+                               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[], releaseName: releaseRecord.get('Name'), releaseDate: releaseRecord.get("ReleaseDate")};
 
                              },this);
 
@@ -632,9 +632,9 @@ _createPlotLines: function() {
   var plotLines = [];
   Ext.each(this.relObjIDs, function(relObjID, index) {
     var relEndDate = this.releaseTally[relObjID].releaseDate;
+    var relName = this.releaseTally[relObjID].releaseName;
     var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-M-d');
     var dateIndex = Ext.Array.indexOf(this.orderedDates, formattedRelEndDate);
-    console.log(formattedRelEndDate, dateIndex);
     if (dateIndex > 0) {
       plotLines.push(
         {
@@ -644,12 +644,11 @@ _createPlotLines: function() {
             zIndex: 10,
             label: {
               rotation: 90,
-              text: formattedRelEndDate
+              text: relName
             }
         });
     }
   }, this);
-  console.log('orderedDates', this.orderedDates);
   return plotLines;
 },
 
