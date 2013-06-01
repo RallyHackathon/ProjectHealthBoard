@@ -443,7 +443,6 @@
                     var finalRelEndDate = new Date(this.releaseTally[finalRelObjID].releaseDate);
                     var lastChartedDate = new Date(this.orderedDates[this.orderedDates.length - 1]);
 
-                    console.log(finalRelEndDate, '****', lastChartedDate);
                     var elapsedMs = Ext.Date.getElapsed(finalRelEndDate, lastChartedDate);
                     // 1000 * 60 * 60 * 24
                     var elapsedDays = Math.ceil((elapsedMs / 86400000));
@@ -452,7 +451,6 @@
 
                       var lastDateIncr = Ext.Date.add(lastChartedDate, Ext.Date.DAY, i);
                       var lastDateIncrFormatted = Ext.Date.format(lastDateIncr, 'Y-M-d');
-                      console.log("adding date", lastDateIncrFormatted);
                       this.orderedDates.push(lastDateIncrFormatted);
                     }
                   },
@@ -553,7 +551,6 @@
 
 
                     }
-
                   },
 
                 _GenerateFeatureData: function(releaseRef) {
@@ -754,7 +751,18 @@ _createChart: function(){
          },
          plotOptions: {
            line: {
-             dashStyle: 'shortDash'
+             dashStyle: 'shortDash',
+             lineWidth: 1,
+             marker: { 
+               enabled: false
+             }
+           },
+           area: {
+             lineWidth: 1,
+             lineColor: 'black',
+             marker: { 
+               enabled: false
+             }
            }
          }
        }
