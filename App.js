@@ -337,7 +337,7 @@
                           load: function(store, releaseRecords, success) {
                              Ext.each(releaseRecords, function(releaseRecord, index){
 
-                               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[], releaseDate: releaseRecord.get("ReleaseDate")};
+                               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[], releaseName: releaseRecord.get('Name'), releaseDate: releaseRecord.get("ReleaseDate")};
 
                              },this);
 
@@ -476,8 +476,13 @@
                     for(var i = 0; i<numYAxes; i++){
 
                       if (this.series[i] === undefined){
-                        this.series[i] = {data:[]};
-                      }
+                        if (i === 0) {
+                          seriesName = "Accepted";
+                        } else {
+                          seriesName = this.releaseTally[this.relObjIDs[i]].releaseName;
+                        }
+                        this.series[i] = {data:[], seriesName: seriesName};
+                    }
 
                       // 0 is acceptedCounts
                       if (i === 0){
@@ -653,9 +658,9 @@ _createPlotLines: function() {
   var plotLines = [];
   Ext.each(this.relObjIDs, function(relObjID, index) {
     var relEndDate = this.releaseTally[relObjID].releaseDate;
+    var relName = this.releaseTally[relObjID].releaseName;
     var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-M-d');
     var dateIndex = Ext.Array.indexOf(this.orderedDates, formattedRelEndDate);
-    console.log(formattedRelEndDate, dateIndex);
     if (dateIndex > 0) {
       plotLines.push(
         {
@@ -665,12 +670,11 @@ _createPlotLines: function() {
             zIndex: 10,
             label: {
               rotation: 90,
-              text: formattedRelEndDate
+              text: relName
             }
         });
     }
   }, this);
-  console.log('orderedDates', this.orderedDates);
   return plotLines;
 },
 
@@ -687,26 +691,27 @@ _createChart: function(){
         series: [
           {
             type: 'area',
-            name: 'AcceptedCount',
+            name: this.series[0].seriesName,
             data: this.series[0].data/*, 
             pointInterval: 20 * 3600 * 1000,
             pointStart: Date.UTC(2006,0,1) */
           },
           {
             type: 'line',
-            name: 'Release 1.0',   //TODO: Fill with release name
+            name: this.series[1].seriesName,
             data: this.series[1].data
           },
           {
             type: 'line',
-            name: 'Release 2.0',   //TODO: Fill with release name
+            name: this.series[2].seriesName,
             data: this.series[2].data
           },
           {
             type: 'line',
-            name: 'Release 3.0',   //TODO: Fill with release name
+            name: this.series[3].seriesName,
             data: this.series[3].data
-          }/*,
+          }
+          /*,
           {
             type: 'line',
             name: 'Accepted Count Trend',
@@ -777,7 +782,6 @@ _createChart: function(){
              dashStyle: 'shortDash'
            }
          }
-             
        }
 
     });
@@ -788,28 +792,3 @@ _createChart: function(){
 
 });
 
-
-
-
-            /*
-                  storeType: 'Rally.data.custom.Store',
-                  storeConfig: {
-                    data:myData,
-                    fields: [
-                      {name: 'time', type: 'string'}, 
-                      {name: 'AcceptedCount', type: 'int'}
-
-                    ]
-
-                  },
-                  xField: 'time',
-                  series:[
-                   {
-                     type:'column',
-                     dataIndex:'AcceptedCount',
-                     name:'Accepted Count',
-                     visible: 'true'
-                   }
-                  ],
-
-            */
