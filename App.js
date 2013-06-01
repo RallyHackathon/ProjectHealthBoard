@@ -478,6 +478,12 @@
                                 value: releaseRef.split('/')[2]
                             }
                         ],
+                        sorters: [
+                            {
+                                property: 'PercentDoneByStoryPlanEstimate',
+                                direction: 'DESC'
+                            }
+                        ],
                         listeners: {
                             load: function(store, features) {
                                 if (features === null || features.length === 0)
