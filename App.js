@@ -196,7 +196,8 @@
                     store: myStore,
                     showPagingToolbar: false,
                     columnCfgs: [
-                        { text: 'Impediments', dataIndex: 'Notes' , flex: 1}
+                        {text: 'Name', dataIndex: 'Name', flex:1},
+                        { text: 'Impediments', dataIndex: 'Notes' , flex: 2}
                     ],
                     title: 'Impediments', 
                     titleAlign: 'center',
@@ -401,13 +402,14 @@
 
                                     if (releasesCumFlowRecs.get('CardState') === 'Accepted') {
                                       this.releaseTally[relObjID][creationDate].acceptedCount = releasesCumFlowRecs.get('CardEstimateTotal');
-                                    } else {
-                                      this.releaseTally[relObjID][creationDate].totalCount += releasesCumFlowRecs.get('CardEstimateTotal');
-                                    }
+                                    } 
+                                   
+                                    this.releaseTally[relObjID][creationDate].totalCount += releasesCumFlowRecs.get('CardEstimateTotal');
+                                    
 
                                 },
                                 this);
-                              
+
                               this._extendDataPoints();
                               this._createChartSeries();
                               this._createChart();  
