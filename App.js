@@ -406,7 +406,7 @@ Ext.define('CustomApp', {
               console.log("release Tally: ", this.releaseTally);
               console.log("orderedDates: ", this.orderedDates);
 
-
+              this._fillChartData();
               this._createChartSeries();
               this._createChart();  
 
@@ -419,12 +419,36 @@ Ext.define('CustomApp', {
 
   },
 
+  _fillChartData: function(){
+
+      Ext.each(this.orderedDates, function(orderedDate, index){
+        
+        Ext.each(this.relObjIDs, function(relObjID, relIndex){
+
+          if (this.releaseTally[relObjID][orderedDate] === undefined){
+             
+             this.releaseTally[relObjID][orderedDate] = {acceptedCount: 0}; 
+             
+             if (index === 0){
+               this.releaseTally[relObjID][orderedDate].acceptedCount = 0;
+             } else {
+               this.releaseTally[relObjID][orderedDate].acceptedCount = this.releaseTally[relObjID][this.orderedDates[index-1]].acceptedCount;
+             }
+          } 
+
+        },this);
+
+      },this);  
+
+  },
+
   _createChartSeries: function(){
 
     this.series = [];
 
     var numYAxes = this.relObjIDs.length;
     console.log("relObjIDs",this.relObjIDs);
+    console.log("releaseTally", this.releaseTally); 
 
     for(var i = 0; i<numYAxes; i++){
 
@@ -435,13 +459,13 @@ Ext.define('CustomApp', {
       // 0 is acceptedCounts
       if (i == 0){
         
-        var j = 0;        
+        var j = 0;       
+
         Ext.each(this.orderedDates, function(orderedDate, index){
           
           var accumulatedTotal = 0;
 
 
-          console.log(orderedDate)
           Ext.each(this.relObjIDs, function(relObjID, index){
 
             if (this.releaseTally[relObjID][orderedDate] !== undefined){
