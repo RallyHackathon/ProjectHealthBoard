@@ -568,12 +568,6 @@
 
 
                     }
-<<<<<<< HEAD
-=======
-
-                    console.log('series',this.series);
-
->>>>>>> origin/master
                   },
 
                 _GenerateFeatureData: function(releaseRef) {
