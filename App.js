@@ -407,7 +407,8 @@
 
                                 },
                                 this);
-
+                              
+                              this._extendDataPoints();
                               this._createChartSeries();
                               this._createChart();  
 
@@ -416,6 +417,25 @@
                         }
 
                       });
+
+                  },
+                  _extendDataPoints: function(){
+
+                    Ext.each(this.orderedDates, function(orderedDate, index){
+                      
+                      Ext.each(this.relObjIDs, function(relObjID, relIndex){
+                        if (this.releaseTally[relObjID][orderedDate] === undefined)
+                        {
+                          this.releaseTally[relObjID][orderedDate] = {acceptedCount: 0};
+                          if (index >1)
+                          {
+                            this.releaseTally[relObjID][orderedDate].acceptedCount = this.releaseTally[relObjID][this.orderedDates[index-1]].acceptedCount;
+                          } 
+                        }  
+
+                      },this);
+
+                    },this); 
 
                   },
 
@@ -460,8 +480,6 @@
 
                         },this); 
 
-                        //console.log(this.series[0].data);
-
                       }
                       // Others are releases
                       else if (i === 1){ 
@@ -488,7 +506,6 @@
                           },this); 
                       }
                       else {
-                          console.log("3rd rel obj",this.relObjIDs[i-1]); 
 
                           var j = 0;
                           Ext.each(this.orderedDates, function(orderedDate, index){
