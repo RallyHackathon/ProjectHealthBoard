@@ -77,7 +77,18 @@
                                                 columnWidth: 0.70,
                                                 border: 0,
                                                 margin: 6,
-                                                layout: 'fit'
+                                                layout: 'fit',
+                                                height: 500,
+                                                width: 500,
+                                                listeners: {
+                                                    afterrender: function () {
+                                                        this.loadMask = new Ext.LoadMask(this, {msg:"Chart Loading..."});
+                                                        this.loadMask.show();
+                                                        this.on('demask', function() {
+                                                            this.loadMask.hide();
+                                                        });
+                                                    }
+                                                }
                                             }
                                         ]
                                     }
@@ -632,7 +643,7 @@ _createChart: function(){
     });
 
     chartContainer.add(myChart);
-
+    chartContainer.fireEvent('demask');
   }
 
 });
