@@ -2,104 +2,140 @@ Ext.define('CustomApp', {
     extend: 'Rally.app.App',
     componentCls: 'app',
 
-            items: [
-                {
-                    xtype: 'container',
-                    itemId: 'DashboardContainer',
-                    border: 1,
-                    margin: 8,
-                    style: {
-                        borderStyle: 'solid',
-                        background: 'green'
-                    },
-                    items: [
-                        {
-                            xtype: 'container',
-                            itemId: 'DescriptionHeader',
-                            colspan: 1,
-                            border: 1,
-                            margin: 16,
-                            style: {
-                                borderStyle: 'solid'
-                            }
-                        },
-                        {
-                            xtype: 'container',
-                            itemId: 'SummaryContent',
-                            colspan: 1,
-                            border: 0,
-                            margin: 8,
-                            style: {
-                                borderStyle: 'solid'
-                            },
-                            layout: 'column',
-                            items: [
-                                {
-                                    xtype: 'container',
-                                    itemId: 'HealthPanel',
-                                    columnWidth: .25,
-                                    border: 0,
-                                    margin: 0,
-                                    style: {
-                                        borderStyle: 'solid'
-                                    },
-                                    items: [
-                                        {
-                                            xtype: 'container',
-                                            itemId: 'ReleaseNotes',
-                                            colspan: 1,
-                                            border: 1,
-                                            margin: 8,
-                                            style: {
-                                                borderStyle: 'solid'
-                                            }
-                                        },
-                                        {
-                                            xtype: 'container',
-                                            itemId: 'FeatureStatus',
-                                            html: 'Feature Status',
-                                            colspan: 1,
-                                            border: 1,
-                                            margin: 8,
-                                            style: {
-                                                borderStyle: 'solid'
-                                            },
-                                        },
-                                        {
-                                            xtype: 'container',
-                                            itemId: 'BlockedWork',
-                                            colspan: 1,
-                                            border: 1,
-                                            margin: 8,
-                                            style: {
-                                                borderStyle: 'solid'
-                                            },
-                                        }
-                                    ]
+                        items: [
+                            {
+                                xtype: 'container',
+                                itemId: 'DashboardContainer',
+                                border: 1,
+                                margin: 6,
+                                style: {
+                                    borderStyle: 'solid',
+                                    background: 'green'
                                 },
-                                {
-                                    xtype: 'container',
-                                    itemId: 'Chart',
-                                    html: 'Chart Displays Here',
-                                    columnWidth: .75,
-                                    border: 1,
-                                    margin: 8,
-                                    style: {
-                                        borderStyle: 'solid'
+                                items: [
+                                    {
+                                        xtype: 'container',
+                                        itemId: 'DescriptionHeader',
+                                        colspan: 1,
+                                        border: 1,
+                                        margin: 12,
+                                        style: {
+                                            borderStyle: 'solid'
+                                        }
                                     },
-                                }
-                            ]
-                        }
+                                    {
+                                        xtype: 'container',
+                                        itemId: 'SummaryContent',
+                                        colspan: 1,
+                                        border: 0,
+                                        margin: 6,
+                                        style: {
+                                            borderStyle: 'solid'
+                                        },
+                                        layout: 'column',
+                                        items: [
+                                            {
+                                                xtype: 'container',
+                                                itemId: 'HealthPanel',
+                                                columnWidth: .25,
+                                                border: 0,
+                                                margin: 0,
+                                                style: {
+                                                    borderStyle: 'solid'
+                                                },
+                                                items: [
+                                                    {
+                                                        xtype: 'rallygrid',
+                                                        //Detects click
+                                                        viewConfig: {
+                                                            listeners: {
+                                                                cellclick: function (view, cell, cellIndex, therecord, row, rowIndex, e) {
+                                                                    Ext.create('Rally.ui.dialog.RichTextDialog', {
+                                                                        autoShow: true,
+                                                                        resizable: true,
+                                                                        draggable: true,
+                                                                        title: 'Edit Impediments',
+                                                                        record: therecord,
+                                                                        fieldName: 'Notes',
+                                                                        width: 400,
+                                                                        height: 250
+                                                                    });
+                                                                }
+                                                            }
+                                                        },
+                                                        itemId: 'ReleaseNotes',
+                                                        colspan: 1,
+                                                        border: 1,
+                                                        margin: 6,
+                                                        store: Ext.create('Rally.data.WsapiDataStore', {
+                                                            model: 'Release',
+                                                            autoLoad: true,
+                                                            filters: [
+                                                                {
+                                                                    property: 'ReleaseStartDate',
+                                                                    operator: '<',
+                                                                    value: 'today'
+                                                                },
+                                                                {
+                                                                    property: 'ReleaseDate',
+                                                                    operator: '>',
+                                                                    value: 'today'
+                                                                }
+                                                            ]
+                                                        }),
+                                                        showPagingToolbar: false,
+                                                        columnCfgs: [
+                                                            { text: 'Impediments', dataIndex: 'Notes' , flex: 1}
+                                                        ],
+                                                        title: 'Impediments', 
+                                                        titleAlign: 'center',
+                                                        hideHeaders: true,
+                                                        enableEditing: true
+                                                    },
+                                                    {
+                                                        xtype: 'container',
+                                                        itemId: 'FeatureStatus',
+                                                        colspan: 1,
+                                                        border: 1,
+                                                        margin: 6,
+                                                        style: {
+                                                            borderStyle: 'solid'
+                                                        }
+                                                    },
+                                                    {
+                                                        xtype: 'container',
+                                                        itemId: 'BlockedWork',
+                                                        colspan: 1,
+                                                        border: 1,
+                                                        margin: 6,
+                                                        style: {
+                                                            borderStyle: 'solid'
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                xtype: 'container',
+                                                itemId: 'Chart',
+                                                columnWidth: .75,
+                                                border: 1,
+                                                margin: 6,
+                                                style: {
+                                                    borderStyle: 'solid'
+                                                }
+                                            }
+                                        ]
+                                    }
 
-                    ]
+                                ]
+                            },
+                        ],
+
+                launch: function() {
+                  this._CurrentReleaseData();
+                  this._BlockedStoriesbyReleaseData();
+                  this._createChart();
                 },
-            ],
-
-    launch: function() {
-      this._CurrentReleaseData();
-      this._BlockedStoriesbyReleaseData();
-      this._createChart();
-    },
 
                 _CurrentReleaseData: function()
                 {
@@ -121,7 +157,7 @@ Ext.define('CustomApp', {
                         listeners: {
                             load: function(store, currentreldata, success) {
                                this._GenerateReleaseDescription(store);
-                               this._GenerateReleaseNotes(store);
+                               this._GenerateFeatureData(currentreldata[0].get('_ref'));
                             },
                             scope: this
                         },
@@ -132,43 +168,37 @@ Ext.define('CustomApp', {
             _GenerateReleaseDescription:  function(myStore)
                 {
                     var myContainer = this.down('#DescriptionHeader');
+                    myContainer.panel = new Ext.Panel({
+                        html: "<B>" + String(myStore.data.items[0].data.Project._refObjectName) + "</B>",
+                        style: {
+                            'text-align': 'center'
+                        },
+                        bodyStyle: {
+                            'background': '#C5E9F8',
+                            'font-size': '1.75em',
+                            'padding': '2px',
+                            'box-shadow': 'inset 0 0 10px #157AB6'
+                        },
+                    });
+                    myContainer.add(myContainer.panel);
+
                     console.log(myStore);
                     myContainer.descriptionheadergrid = Ext.create('Rally.ui.grid.Grid', {
                         store: myStore,
                         showPagingToolbar: false,
                         columnCfgs: [
                             { text: 'Release Name', dataIndex: 'Name' , flex: 1},
-                            { text: 'Theme', dataIndex: 'Theme', flex: 3},
+                            { text: 'Release Theme', dataIndex: 'Theme', flex: 3},
                             { text: 'Release Date', dataIndex: 'ReleaseDate', 
                                 renderer: function(value){
                                     dateVal = new Date(value);
                                     dateVal = Ext.Date.format(dateVal, 'F j, Y');
                                     return dateVal;
                                 },
-                             flex: 1},
-                        ],
-                        title: String(myStore.data.items[0].data.Project._refObjectName), 
-                        titleAlign: 'center'
+                             flex: 1}
+                        ]
                     });
                     myContainer.add(myContainer.descriptionheadergrid);
-                },
-
-            _GenerateReleaseNotes: function(myStore)
-                {
-                    var myContainer = this.down('#ReleaseNotes');
-                    myContainer.releasenotesgrid = Ext.create('Rally.ui.grid.Grid', {
-                        store: myStore,
-                        showPagingToolbar: false,
-                        columnCfgs: [
-                            { text: 'Impediments', dataIndex: 'Notes' , flex: 1}
-                        ],
-                        title: 'Impediments', 
-                        titleAlign: 'center',
-                        hideHeaders: true,
-                        enableEditing: true,
-                        selType: 'cellmodel'
-                    });
-                    myContainer.add(myContainer.releasenotesgrid);
                 },
 
             _BlockedStoriesbyReleaseData: function()
@@ -254,6 +284,66 @@ Ext.define('CustomApp', {
                     });
                     myContainer.add(myContainer.blockedGrid);
                 },
+
+                _GenerateFeatureData: function(releaseRef) {
+                    var featureStore = Ext.create('Rally.data.WsapiDataStore', {
+                        model: 'Portfolio Item/Feature',
+                        autoLoad: true,
+                        filters: [
+                            {
+                                property: 'Release.ObjectID', //maybe change to id at some point
+                                operator: '=',
+                                value: releaseRef.split('/')[2]
+                            }
+                        ],
+                        listeners: {
+                            load: function(store, features) {
+                                if (features === null || features.length === 0)
+                                {
+                                    console.log('No Features');
+                                }
+                                else {
+                                    console.log(features);
+                                    this._GenerateFeatureGrid(store);
+                                }
+                            },
+                            scope: this
+                        }
+                    });
+                },
+
+                _GenerateFeatureGrid: function(myStore) {
+                    var myContainer = this.down('#FeatureStatus');
+                    myContainer.featureGrid = Ext.create('Rally.ui.grid.Grid', {
+                        pagesize: 25,
+                        showPagingToolbar: false,
+                        store: myStore,
+                        columnCfgs: [
+                            { 
+                                text: 'Feature', dataIndex: 'Name', flex: 1,
+                                renderer: function(value, meta, record){
+                                    var proj = record.get('Project')._ref;
+                                    proj = String(proj);
+                                    proj = proj.substr(9);
+                                    var link = "../#/" + proj+'/detail'+String(record.get('_ref'));
+                                    return '<a href="' + link + '"target="_parent">' + value + '</a>';
+                                }
+                            },
+                            {
+                                text: 'Percent Complete',
+                                xtype: 'templatecolumn',
+                                tpl: Ext.create('Rally.ui.renderer.template.PercentDoneTemplate', 
+                                {
+                                    percentDoneName: 'PercentDoneByStoryPlanEstimate'
+                                })
+                            }
+                        ],
+                        title: 'Feature Status',
+                        titleAlign: 'center'
+                    });
+                    myContainer.add(myContainer.featureGrid);
+                },
+
 
   _createChart: function(){
 
