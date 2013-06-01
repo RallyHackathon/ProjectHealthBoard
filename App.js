@@ -184,7 +184,7 @@
                                     autoShow: true,
                                     resizable: true,
                                     draggable: true,
-                                    title: 'Edit Impediments',
+                                    title: 'Edit Impediments of ' + therecord.get('Name'),
                                     record: therecord,
                                     fieldName: 'Notes',
                                     width: 400,
