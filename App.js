@@ -159,15 +159,16 @@
                         showPagingToolbar: false,
                         disableSelection: true,
                         columnCfgs: [
-                            { text: 'Release Name', dataIndex: 'Name' , flex: 1},
-                            { text: 'Release Theme', dataIndex: 'Theme', flex: 3},
+                            { text: 'Release Name', dataIndex: 'Name' , flex: 1, sortable: false},
+                            { text: 'Release Theme', dataIndex: 'Theme', flex: 3, sortable: false},
                             { text: 'Release Date', dataIndex: 'ReleaseDate', 
                                 renderer: function(value){
                                     dateVal = new Date(value);
                                     dateVal = Ext.Date.format(dateVal, 'F j, Y');
                                     return dateVal;
                                 },
-                             flex: 1}
+                             flex: 1,
+                             sortable: false}
                         ]
                     });
                     myContainer.add(myContainer.descriptionheadergrid);
@@ -196,8 +197,8 @@
                     store: myStore,
                     showPagingToolbar: false,
                     columnCfgs: [
-                        {text: 'Name', dataIndex: 'Name', flex:1},
-                        { text: 'Impediments', dataIndex: 'Notes' , flex: 2}
+                        {text: 'Name', dataIndex: 'Name', flex:1, sortable: false},
+                        { text: 'Impediments', dataIndex: 'Notes' , flex: 2, sortable: false}
                     ],
                     title: 'Impediments', 
                     titleAlign: 'center',
@@ -281,7 +282,7 @@
                         disableSelection: true,
                         columnCfgs: [
                             { 
-                                text: 'Feature', dataIndex: 'Feature', flex: 1,
+                                text: 'Feature', dataIndex: 'Feature', flex: 1, sortable: false,
                                 renderer: function(value, meta, record){
                                     if (value !== null) {
                                         var proj = record.get('Project')._ref;
@@ -296,7 +297,7 @@
                                 }
                             },
                             { 
-                                text: 'Blocked Story', dataIndex: 'Name' , flex: 1,
+                                text: 'Blocked Story', dataIndex: 'Name' , flex: 1, sortable: false,
                                 renderer: function(value, meta, record) {
                                     var proj = record.get('Project')._ref;
                                     proj = String(proj);
@@ -305,7 +306,7 @@
                                     return '<a href="' + link + '"target="_parent">' + value + '</a>';
                                 }
                             },
-                            {text: 'Blocked Reason', dataIndex: 'BlockedReason', flex: 1}
+                            {text: 'Blocked Reason', dataIndex: 'BlockedReason', flex: 1, sortable: false}
                         ],
                         title: 'Blocked Stories',
                         titleAlign: 'center'
@@ -617,7 +618,7 @@
                         store: myStore,
                         columnCfgs: [
                             { 
-                                text: 'Feature', dataIndex: 'Name', flex: 1,
+                                text: 'Feature', dataIndex: 'Name', flex: 1, sortable: false,
                                 renderer: function(value, meta, record){
                                     var proj = record.get('Project')._ref;
                                     proj = String(proj);
@@ -628,6 +629,7 @@
                             },
                             {
                                 text: 'Percent Complete',
+                                flex: 1,
                                 xtype: 'templatecolumn',
                                 tpl: Ext.create('Rally.ui.renderer.template.progressbar.PortfolioItemPercentDoneTemplate', 
                                 {
