@@ -432,12 +432,67 @@
 
                           },this);
 
-                          this.series[i].data[j] = accumulatedTotal;  
+
+                          this.series[i].data[j] = 0;
+                          if (accumulatedTotal !== undefined)
+                          {
+                            this.series[i].data[j] = accumulatedTotal;  
+                          } else {
+                            this.series[i].data[j] = this.series[i].data[j-1];  
+                          }
 
                           j++;
 
                         },this); 
 
+                        console.log(this.series[0].data);
+
+                      }
+                      // Others are releases
+                      else if (i === 1){ 
+
+                          var j = 0;
+                          Ext.each(this.orderedDates, function(orderedDate, index){
+                            var myRelObjID = this.relObjIDs[i-1];
+
+                            if (this.releaseTally[myRelObjID][orderedDate] !== undefined){
+                              accumulatedTotal = this.releaseTally[myRelObjID][orderedDate].totalCount;
+                            }
+
+                            this.series[i].data[j] = 0;
+                            if (accumulatedTotal !== undefined)
+                            {
+                              this.series[i].data[j] = accumulatedTotal;  
+                            } else {
+                              this.series[i].data[j] = this.series[i].data[j-1];  
+                            }
+
+                            j++;
+
+                          },this); 
+                      }
+                      else {
+                          console.log("3rd rel obj",this.relObjIDs[i-1]); 
+
+                          var j = 0;
+                          Ext.each(this.orderedDates, function(orderedDate, index){
+                            var myRelObjID = this.relObjIDs[i-1];
+
+                            if (this.releaseTally[myRelObjID][orderedDate] !== undefined){
+                              accumulatedTotal = this.releaseTally[myRelObjID][orderedDate].totalCount;
+                            }
+
+                            this.series[i].data[j] = 0;
+                            if (accumulatedTotal !== undefined)
+                            {
+                              this.series[i].data[j] = accumulatedTotal;  
+                            } else {
+                              this.series[i].data[j] = this.series[i].data[j-1];  
+                            }
+
+                            j++;
+
+                          },this); 
                       }
 
 
@@ -555,6 +610,16 @@ _createChart: function(){
             data: this.series[0].data/*, 
             pointInterval: 20 * 3600 * 1000,
             pointStart: Date.UTC(2006,0,1) */
+          },
+          {
+            type: 'line',
+            name: 'Beta 1.0',
+            data: this.series[1].data
+          },
+          {
+            type: 'line',
+            name: 'Release 1.0',
+            data: this.series[1].data
           }/*,
           {
             type: 'line',
@@ -599,10 +664,10 @@ _createChart: function(){
              spacingRight: 20
          },
          title: {
-             text: 'My Title'
+             text: 'Release Burnup'
          },
          subtitle: {
-             text: 'My SubTitle'
+             text: ''
          },
          xAxis: {
           /*type: 'datetime',
