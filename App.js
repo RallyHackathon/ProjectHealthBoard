@@ -98,7 +98,14 @@ Ext.define('CustomApp', {
     launch: function() {
       this._CurrentReleaseData();
       this._BlockedStoriesbyReleaseData();
-      this._createChart();
+      
+
+      //Create the chart
+      this._getReleaseData(); 
+
+      console.log("context: ", this.getContext().getDataContext());
+
+
     },
 
                 _CurrentReleaseData: function()
@@ -255,7 +262,188 @@ Ext.define('CustomApp', {
                     myContainer.add(myContainer.blockedGrid);
                 },
 
+  _getReleaseData: function(){
+
+
+    this.releaseTally= {};
+
+    Ext.create('Rally.data.WsapiDataStore',{
+        model: 'Release',
+        autoLoad: 'true',
+        pageSize: 500,
+        sorters: [
+          {
+          property: 'ReleaseStartDate',
+          direction: 'ASC'
+          }
+        ],
+/*        context: {
+          project:'/project/6009023180',
+          projectScopeUp: false,
+          projectScopeDown: false
+        }, */
+        listeners: {
+          load: function(store, releaseRecords, success) {
+
+             console.log("releaseRecords", releaseRecords);
+
+             Ext.each(releaseRecords, function(releaseRecord, index){
+               console.log(this);
+
+               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[]};
+
+             },this);
+
+
+
+             this._queryRecords(releaseRecords); 
+          },
+          scope: this
+        }
+
+      });
+
+  },
+
+
+  _queryRecords: function(releaseRecords){
+
+    this.relObjQueryFilters = [];
+
+    this.relObjIDs = []; 
+
+    Ext.each(releaseRecords, function(releaseRecord, index) {
+      this.relObjQueryFilters.push({property: 'ReleaseObjectID', operatation: '=', value: releaseRecord.get("ObjectID")});
+      this.relObjIDs.push(releaseRecord.get("ObjectID"));
+    }, this);
+
+    var filter = Rally.data.QueryFilter.or(this.relObjQueryFilters);
+
+    console.log("filter = ", filter.toString());
+
+
+
+    this.orderedDates = [];
+
+    Ext.create('Rally.data.WsapiDataStore',{
+        model: 'ReleaseCumulativeFlowData',
+        autoLoad: 'true',
+        limit: 5000,
+        sorters: [
+          {
+            property: 'CreationDate',
+            direction: 'ASC'
+          }
+        ],
+        filters: filter,
+/*        context: {
+          project:'/project/6009023180',
+          projectScopeUp: false,
+          projectScopeDown: false
+        }, */
+        listeners: {
+          load: function(store, releasesCumFlowRecs, success) {
+
+              console.log ("releasesCumFlowRecs: ", releasesCumFlowRecs.length, releasesCumFlowRecs);
+              console.log(this);
+              Ext.each(releasesCumFlowRecs, function(releasesCumFlowRecs, index) {
+                    
+                    var relObjID = releasesCumFlowRecs.get('ReleaseObjectID');
+
+                    if (this.releaseTally[relObjID] === undefined) {
+                      this.releaseTally[relObjID] = {};
+                      console.log("New Release", relObjID);
+                    }
+
+                    var creationDate = releasesCumFlowRecs.get('CreationDate');
+                    creationDate = Ext.Date.format(creationDate,'c');
+
+                    if (this.releaseTally[relObjID][creationDate] === undefined ) {
+                       this.releaseTally[relObjID][creationDate] = {acceptedCount: 0, totalCount: 0};
+                       this.orderedDates.push(creationDate);
+
+                    }
+
+                    if (releasesCumFlowRecs.get('CardState') === 'Accepted') {
+                      this.releaseTally[relObjID][creationDate].acceptedCount = releasesCumFlowRecs.get('CardEstimateTotal');
+                    } else {
+                      this.releaseTally[relObjID][creationDate].totalCount += releasesCumFlowRecs.get('CardEstimateTotal');
+                    }
+
+                },
+                this);
+
+              console.log("release Tally: ", this.releaseTally);
+              console.log("orderedDates: ", this.orderedDates);
+
+
+              this._createChartSeries();
+              this._createChart();  
+
+          },
+          scope:this
+        }
+
+      });
+
+
+  },
+
+  _createChartSeries: function(){
+
+    var series = [];
+
+    var numYAxes = this.relObjIDs.length;
+    console.log("relObjIDs",this.relObjIDs);
+
+    for(var i = 0; i<numYAxes; i++){
+
+      if (series[i] === undefined){
+        series[i] = {data:[]};
+      }
+
+      // 0 is acceptedCounts
+      if (i == 0){
+        
+        var j = 0;        
+        Ext.each(this.orderedDates, function(orderedDate, index){
+          
+          var accumulatedTotal = 0;
+
+
+          console.log(orderedDate)
+          Ext.each(this.relObjIDs, function(relObjID, index){
+
+            console.log("here: ", this.releaseTally, relObjID, orderedDate);
+
+
+            console.log(this.releaseTally[relObjID]);
+
+            if (this.releaseTally[relObjID][orderedDate] !== undefined){
+              accumulatedTotal += this.releaseTally[relObjID][orderedDate].acceptedCount;
+            }
+
+          },this);
+
+          series[i].data[j] = accumulatedTotal;  
+
+          j++;
+
+        },this); 
+
+      }
+
+
+    }
+
+    console.log("series", series);
+
+
+  },
+
   _createChart: function(){
+
+
 
     var chartContainer = this.down('#Chart');
 
