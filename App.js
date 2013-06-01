@@ -109,6 +109,11 @@
                                 value: 'today'
                             }
                         ],
+                        context: {
+                          project: this.getContext().getProjectRef(),
+                          projectScopeUp: false,
+                          projectScopeDown: false
+                        },
                         listeners: {
                             load: function(store, currentreldata, success) {
                                this._GenerateReleaseDescription(store);
@@ -311,14 +316,13 @@
                           direction: 'ASC'
                           }
                         ],
-                /*        context: {
-                          project:'/project/6009023180',
+                        context: {
+                          project: this.getContext().getProjectRef(),
                           projectScopeUp: false,
                           projectScopeDown: false
-                        }, */
+                        },
                         listeners: {
                           load: function(store, releaseRecords, success) {
-
                              Ext.each(releaseRecords, function(releaseRecord, index){
 
                                this.releaseTally[releaseRecord.get("ObjectID")] = {data:[], releaseDate: releaseRecord.get("ReleaseDate")};
@@ -377,11 +381,11 @@
                                     }
 
                                     var creationDate = releasesCumFlowRecs.get('CreationDate');
-                                    creationDate = Ext.Date.format(new Date(creationDate),'Y-M-d');
+                                    creationDate = Ext.Date.format(new Date(creationDate),'Y-m-d');
 
                                     if (this.releaseTally[relObjID][creationDate] === undefined ) {
                                        this.releaseTally[relObjID][creationDate] = {acceptedCount: 0, totalCount: 0};
-                                       this.orderedDates.push(Ext.Date.format(new Date(creationDate), 'Y-M-d'));
+                                       this.orderedDates.push(Ext.Date.format(new Date(creationDate), 'Y-m-d'));
                                     }
 
                                     if (releasesCumFlowRecs.get('CardState') === 'Accepted') {
@@ -528,13 +532,25 @@ _createPlotLines: function() {
   var plotLines = [];
   Ext.each(this.relObjIDs, function(relObjID, index) {
     var relEndDate = this.releaseTally[relObjID].releaseDate;
-    var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-M-d');
+    var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-m-d');
     var dateIndex = Ext.Array.indexOf(this.orderedDates, formattedRelEndDate);
+    console.log(formattedRelEndDate);
     if (dateIndex > 0) {
-      plotLines.push({color: 'red', value: index, width: 1, zIndex: 10});
+      plotLines.push(
+        {
+            color: 'red',
+            value: index,
+            width: 1,
+            zIndex: 10,
+            label: {
+              rotation: 90,
+              text: formattedRelEndDate
+            }
+        });
     }
   }, this);
   console.log("plotlines", plotLines);
+  console.log('orderdates', this.orderedDates);
   return plotLines;
 },
 
@@ -599,10 +615,7 @@ _createChart: function(){
              spacingRight: 20
          },
          title: {
-             text: 'My Title'
-         },
-         subtitle: {
-             text: 'My SubTitle'
+             text: 'Release Trend'
          },
          xAxis: {
           /*type: 'datetime',
@@ -614,7 +627,7 @@ _createChart: function(){
          yAxis: [
              {
                  title: {
-                     text: 'Count'
+                     text: 'Points'
                  }
              }
          ],
