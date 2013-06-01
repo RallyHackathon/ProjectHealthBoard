@@ -1,0 +1,3 @@
+* we assumed relcumflow dates are inclusive of all calendar dates; however if the analytics engine doesn't run (e.g. on weekends per workspace config), there are no date entries and we don't have those dats on the X-Axis.
+* use lookback to know how stories moved from release "1.0" are moved to release "2.0" even before release 2.0 is started (current analytics only captures point data on release start dates)
+
