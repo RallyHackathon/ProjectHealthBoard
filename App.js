@@ -184,7 +184,7 @@
                                     autoShow: true,
                                     resizable: true,
                                     draggable: true,
-                                    title: 'Edit Impediments',
+                                    title: 'Edit Impediments of ' + therecord.get('Name'),
                                     record: therecord,
                                     fieldName: 'Notes',
                                     width: 400,
@@ -384,6 +384,9 @@
                         listeners: {
                           load: function(store, releasesCumFlowRecs, success) {
 
+                              console.log('releasesCumFlowRecs',releasesCumFlowRecs);
+
+
                               Ext.each(releasesCumFlowRecs, function(releasesCumFlowRecs, index) {
                                     
                                     var relObjID = releasesCumFlowRecs.get('ReleaseObjectID');
@@ -409,6 +412,7 @@
 
                                 },
                                 this);
+                              console.log('releaseTally',this.releaseTally);
 
                               this._extendDataPoints();
                               this._createChartSeries();
@@ -429,9 +433,15 @@
                         if (this.releaseTally[relObjID][orderedDate] === undefined)
                         {
                           this.releaseTally[relObjID][orderedDate] = {acceptedCount: 0};
+
+                          if (!this.releaseTally[relObjID][orderedDate].totalCount) {
+                            this.releaseTally[relObjID][orderedDate].totalCount = 0;
+                          }
+
                           if (index >1)
                           {
                             this.releaseTally[relObjID][orderedDate].acceptedCount = this.releaseTally[relObjID][this.orderedDates[index-1]].acceptedCount;
+                            this.releaseTally[relObjID][orderedDate].totalCount    = this.releaseTally[relObjID][this.orderedDates[index-1]].totalCount;
                           } 
                         }  
 
@@ -529,12 +539,16 @@
                       else {
 
                           var j = 0;
+                          console.log('here ', i);
                           Ext.each(this.orderedDates, function(orderedDate, index){
                             var myRelObjID = this.relObjIDs[i-1];
+
+                            console.log(myRelObjID);
 
                             if (this.releaseTally[myRelObjID][orderedDate] !== undefined){
                               accumulatedTotal = this.releaseTally[myRelObjID][orderedDate].totalCount;
                             }
+
 
                             this.series[i].data[j] = 0;
                             if (accumulatedTotal !== undefined)
@@ -544,6 +558,9 @@
                               this.series[i].data[j] = this.series[i].data[j-1];  
                             }
 
+
+                            // add in previous release
+                            this.series[i].data[j] += this.series[i-1].data[j];
                             j++;
 
                           },this); 
@@ -551,6 +568,12 @@
 
 
                     }
+<<<<<<< HEAD
+=======
+
+                    console.log('series',this.series);
+
+>>>>>>> origin/master
                   },
 
                 _GenerateFeatureData: function(releaseRef) {
@@ -681,9 +704,15 @@ _createChart: function(){
           },
           {
             type: 'line',
-            name: this.series[1].seriesName,
-            data: this.series[1].data
-          }/*,
+            name: this.series[2].seriesName,
+            data: this.series[2].data
+          },
+          {
+            type: 'line',
+            name: this.series[3].seriesName,
+            data: this.series[3].data
+          }
+          /*,
           {
             type: 'line',
             name: 'Accepted Count Trend',
