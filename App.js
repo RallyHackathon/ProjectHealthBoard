@@ -384,9 +384,6 @@
                         listeners: {
                           load: function(store, releasesCumFlowRecs, success) {
 
-                              console.log('releasesCumFlowRecs',releasesCumFlowRecs);
-
-
                               Ext.each(releasesCumFlowRecs, function(releasesCumFlowRecs, index) {
                                     
                                     var relObjID = releasesCumFlowRecs.get('ReleaseObjectID');
@@ -412,7 +409,6 @@
 
                                 },
                                 this);
-                              console.log('releaseTally',this.releaseTally);
 
                               this._extendDataPoints();
                               this._createChartSeries();
@@ -539,11 +535,8 @@
                       else {
 
                           var j = 0;
-                          console.log('here ', i);
                           Ext.each(this.orderedDates, function(orderedDate, index){
                             var myRelObjID = this.relObjIDs[i-1];
-
-                            console.log(myRelObjID);
 
                             if (this.releaseTally[myRelObjID][orderedDate] !== undefined){
                               accumulatedTotal = this.releaseTally[myRelObjID][orderedDate].totalCount;
