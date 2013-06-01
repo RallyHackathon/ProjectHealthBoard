@@ -1,3 +1,5 @@
+// An App
+
             Ext.define('CustomApp', {
                 extend: 'Rally.app.App',
                 componentCls: 'app',
@@ -136,7 +138,6 @@
                     });
                     myContainer.add(myContainer.panel);
 
-                    console.log(myStore);
                     myContainer.descriptionheadergrid = Ext.create('Rally.ui.grid.Grid', {
                         store: myStore,
                         showPagingToolbar: false,
@@ -318,18 +319,13 @@
                         listeners: {
                           load: function(store, releaseRecords, success) {
 
-                             console.log("releaseRecords", releaseRecords);
-
                              Ext.each(releaseRecords, function(releaseRecord, index){
-                               console.log(this);
 
-                               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[]};
+                               this.releaseTally[releaseRecord.get("ObjectID")] = {data:[], releaseDate: releaseRecord.get("ReleaseDate")};
 
                              },this);
 
-
-
-                             this._queryRecords(releaseRecords); 
+                             this._queryRelCumFlowRecords(releaseRecords); 
                           },
                           scope: this
                         }
@@ -338,8 +334,7 @@
 
                   },
 
-
-                  _queryRecords: function(releaseRecords){
+                  _queryRelCumFlowRecords: function(releaseRecords){
 
                     this.relObjQueryFilters = [];
 
@@ -351,10 +346,6 @@
                     }, this);
 
                     var filter = Rally.data.QueryFilter.or(this.relObjQueryFilters);
-
-                    console.log("filter = ", filter.toString());
-
-
 
                     this.orderedDates = [];
 
@@ -377,24 +368,20 @@
                         listeners: {
                           load: function(store, releasesCumFlowRecs, success) {
 
-                              console.log ("releasesCumFlowRecs: ", releasesCumFlowRecs.length, releasesCumFlowRecs);
-                              console.log(this);
                               Ext.each(releasesCumFlowRecs, function(releasesCumFlowRecs, index) {
                                     
                                     var relObjID = releasesCumFlowRecs.get('ReleaseObjectID');
 
                                     if (this.releaseTally[relObjID] === undefined) {
                                       this.releaseTally[relObjID] = {};
-                                      console.log("New Release", relObjID);
                                     }
 
                                     var creationDate = releasesCumFlowRecs.get('CreationDate');
-                                    creationDate = Ext.Date.format(creationDate,'c');
+                                    creationDate = Ext.Date.format(new Date(creationDate),'Y-M-d');
 
                                     if (this.releaseTally[relObjID][creationDate] === undefined ) {
                                        this.releaseTally[relObjID][creationDate] = {acceptedCount: 0, totalCount: 0};
-                                       this.orderedDates.push(creationDate);
-
+                                       this.orderedDates.push(Ext.Date.format(new Date(creationDate), 'Y-M-d'));
                                     }
 
                                     if (releasesCumFlowRecs.get('CardState') === 'Accepted') {
@@ -405,10 +392,6 @@
 
                                 },
                                 this);
-
-                              console.log("release Tally: ", this.releaseTally);
-                              console.log("orderedDates: ", this.orderedDates);
-
 
                               this._createChartSeries();
                               this._createChart();  
@@ -426,7 +409,6 @@
                     this.series = [];
 
                     var numYAxes = this.relObjIDs.length;
-                    console.log("relObjIDs",this.relObjIDs);
 
                     for(var i = 0; i<numYAxes; i++){
 
@@ -442,8 +424,6 @@
                           
                           var accumulatedTotal = 0;
 
-
-                          console.log(orderedDate);
                           Ext.each(this.relObjIDs, function(relObjID, index){
 
                             if (this.releaseTally[relObjID][orderedDate] !== undefined){
@@ -462,8 +442,6 @@
 
 
                     }
-
-                    console.log("this.series", this.series);
 
                   },
 
@@ -545,9 +523,26 @@
                     myContainer.add(myContainer.featureGrid);
                 },
 
+_createPlotLines: function() {
+  var relEndDates = [];
+  var plotLines = [];
+  Ext.each(this.relObjIDs, function(relObjID, index) {
+    var relEndDate = this.releaseTally[relObjID].releaseDate;
+    var formattedRelEndDate = Ext.Date.format(new Date(relEndDate), 'Y-M-d');
+    var dateIndex = Ext.Array.indexOf(this.orderedDates, formattedRelEndDate);
+    if (dateIndex > 0) {
+      plotLines.push({color: 'red', value: index, width: 1, zIndex: 10});
+    }
+  }, this);
+  console.log("plotlines", plotLines);
+  return plotLines;
+},
+
 _createChart: function(){
 
     var chartContainer = this.down('#Chart');
+
+    var plotLines = this._createPlotLines();
 
     var myChart = Ext.create('Rally.ui.chart.Chart',{
       width: 500,
@@ -613,7 +608,8 @@ _createChart: function(){
           /*type: 'datetime',
           maxZoom: 1 * 24 * 3600000, // fourteen days */
           categories: this.orderedDates,
-          title: 'x title'
+          title: 'x title',
+          plotLines: plotLines
          },
          yAxis: [
              {
