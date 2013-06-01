@@ -44,6 +44,7 @@ Ext.define('CustomApp', {
                                 borderStyle: 'solid'
                             },
                             items: [
+                            /* FIXME RG: store complains about i/o issue; possibly not having context in store?
                                 {
                                     xtype: 'rallygrid',
                                     //Detects click
@@ -92,6 +93,7 @@ Ext.define('CustomApp', {
                                     hideHeaders: true,
                                     enableEditing: true
                                 },
+                                */
                                 {
                                     xtype: 'container',
                                     itemId: 'FeatureStatus',
