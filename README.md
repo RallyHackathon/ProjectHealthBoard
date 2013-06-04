@@ -10,8 +10,9 @@ Provides at-a-glance project information for use as a Rally dashboard informatio
 
 ## Authors 
 
-Stephen Kandl <stephen.kandl@ge.com, GE Intelligent Platforms>
-Dean Talley <dean.talley@ge.com, GE Intelligent Platforms>
-David Thomas <dthomas@rallydev.com, Rally Software>
-Joel Krooswyk <jkrooswyk@rallydev.com, Rally Software>
-Richard Green <rgreen@rallydev.com, Rally Software>
+<p> Stephen Kandl &lt;stephen.kandl@ge.com, GE Intelligent Platforms&gt; </p>
+<p> Dean Talley &lt;dean.talley@ge.com, GE Intelligent Platforms&gt; </p>
+<p> David Thomas &lt;dthomas@rallydev.com, Rally Software&gt; </p>
+<p> Joel Krooswyk &lt;jkrooswyk@rallydev.com, Rally Software&gt; </p>
+<p> Richard Green &lt;rgreen@rallydev.com, Rally Software&gt; </p>
+
