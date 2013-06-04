@@ -9,10 +9,10 @@ Provides at-a-glance project information for use as a Rally dashboard informatio
 - What value has been delivered (accepted) recently and what is currently in progress?
 
 ## Authors 
+Stephen Kandl &lt;stephen.kandl@ge.com, GE Intelligent Platforms&gt; <br>
+Dean Talley &lt;dean.talley@ge.com, GE Intelligent Platforms&gt; <br>
+David Thomas &lt;dthomas@rallydev.com, Rally Software&gt; <br>
+Joel Krooswyk &lt;jkrooswyk@rallydev.com, Rally Software&gt; <br>
+Richard Green &lt;rgreen@rallydev.com, Rally Software&gt; <br>
 
-<p> Stephen Kandl &lt;stephen.kandl@ge.com, GE Intelligent Platforms&gt; </p>
-<p> Dean Talley &lt;dean.talley@ge.com, GE Intelligent Platforms&gt; </p>
-<p> David Thomas &lt;dthomas@rallydev.com, Rally Software&gt; </p>
-<p> Joel Krooswyk &lt;jkrooswyk@rallydev.com, Rally Software&gt; </p>
-<p> Richard Green &lt;rgreen@rallydev.com, Rally Software&gt; </p>
 
